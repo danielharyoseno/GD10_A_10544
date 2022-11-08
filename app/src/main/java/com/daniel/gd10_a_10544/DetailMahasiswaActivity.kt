@@ -11,8 +11,8 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class DetailMahasiswaActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityDetailMahasiswaBinding
-    private var b:Bundle? = null
+    private lateinit var binding: ActivityDetailMahasiswaBinding
+    private var b: Bundle? = null
     private val listMahasiswa = ArrayList<MahasiswaData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,22 +31,22 @@ class DetailMahasiswaActivity : AppCompatActivity() {
 
         binding.btnEdit.setOnClickListener {
             startActivity(Intent(this, FormEditMahasiswaActivity::class.java).apply {
-                putExtra("nim",nim)
+                putExtra("nim", nim)
             })
         }
     }
 
-    fun getDataDetail(nim:String){
-        RClient.instance.getData(nim).enqueue(object : Callback<ResponseDataMahasiswa>{
+    fun getDataDetail(nim: String) {
+        RClient.instance.getData(nim).enqueue(object : Callback<ResponseDataMahasiswa> {
             override fun onResponse(
                 call: Call<ResponseDataMahasiswa>,
                 response: Response<ResponseDataMahasiswa>
             ) {
-                if(response.isSuccessful){
+                if (response.isSuccessful) {
                     response.body()?.let {
                         listMahasiswa.addAll(it.data)
                     }
-                    with(binding){
+                    with(binding) {
                         tvNim.text = listMahasiswa[0].nim
                         tvNama.text = listMahasiswa[0].nama
                         tvAlamat.text = listMahasiswa[0].alamat
@@ -67,29 +67,29 @@ class DetailMahasiswaActivity : AppCompatActivity() {
         this.recreate()
     }
 
-    fun deleteData(nim: String){
+    fun deleteData(nim: String) {
         val builder = AlertDialog.Builder(this@DetailMahasiswaActivity)
         builder.setMessage("Anda Yakin mau hapus ?? Saya ngak yakin loh.")
             .setCancelable(false)
-            .setPositiveButton("Ya, Hapus Aja!"){
-                dialog, id-> doDeleteData(nim)
+            .setPositiveButton("Ya, Hapus Aja!") { dialog, id ->
+                doDeleteData(nim)
             }
-            .setNegativeButton("Tidak, Masih sayang dataku"){
-                dialog, id -> dialog.dismiss()
+            .setNegativeButton("Tidak, Masih sayang dataku") { dialog, id ->
+                dialog.dismiss()
             }
 
         val alert = builder.create()
         alert.show()
     }
 
-    private fun doDeleteData(nim: String){
-        RClient.instance.deleteData(nim).enqueue(object : Callback<ResponseDataMahasiswa>{
+    private fun doDeleteData(nim: String) {
+        RClient.instance.deleteData(nim).enqueue(object : Callback<ResponseDataMahasiswa> {
             override fun onResponse(
                 call: Call<ResponseDataMahasiswa>,
                 response: Response<ResponseDataMahasiswa>
             ) {
-                if(response.isSuccessful){
-                    Toast.makeText(applicationContext,"Data Berhasil dihapus", Toast.LENGTH_LONG).show()
+                if (response.isSuccessful) {
+                    Toast.makeText(applicationContext, "Data berhasil dihapus", Toast.LENGTH_LONG).show()
                     finish()
                 }
             }
@@ -99,22 +99,4 @@ class DetailMahasiswaActivity : AppCompatActivity() {
             }
         })
     }
-
-//    private fun doDeleteData(nim: String){
-//        RClient.instance.deleteData(nim).enqueue(object : Callback<ResponseCreate>{
-//            override fun onResponse(
-//                call: Call<ResponseCreate>,
-//                response: Response<ResponseCreate>
-//            ) {
-//                if(response.isSuccessful){
-//                    Toast.makeText(applicationContext,"Data Berhasil dihapus", Toast.LENGTH_LONG).show()
-//                    finish()
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ResponseCreate>, t: Throwable) {
-//
-//            }
-//        })
-//    }
 }
